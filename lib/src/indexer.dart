@@ -7,6 +7,7 @@ import 'package:scip_dart/src/flags.dart';
 
 import 'package:scip_dart/src/gen/scip.pb.dart';
 import 'package:scip_dart/src/scip_visitor.dart';
+import 'package:scip_dart/src/test_paths.dart';
 import 'package:scip_dart/src/utils.dart';
 import 'package:scip_dart/src/version.dart';
 
@@ -26,6 +27,8 @@ Future<Index> indexPackage(
       arguments: [],
     ),
   );
+
+  final testPaths = TestPaths.forPackage(dirPath);
 
   final allPackageRoots = packageConfig.packages
       .map((package) => p.normalize(package.packageUriRoot.toFilePath()))
@@ -80,6 +83,12 @@ Future<Index> indexPackage(
       pubspec,
     );
     resUnit.unit.accept(visitor);
+
+    if (testPaths.contains(relativePath)) {
+      for (final occurrence in visitor.occurrences) {
+        occurrence.symbolRoles |= SymbolRole.Test.value;
+      }
+    }
 
     return Document(
       language: Language.Dart.name,

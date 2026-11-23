@@ -33,6 +33,22 @@ jobs:
             dart pub global activate dependency_validator ^4.1.0
             dart pub global run dependency_validator
 
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.13.7
+      - run: dart pub get
+
+      - name: pub get test fixture
+        working-directory: ./snapshots/input/basic-project
+        run: dart pub get
+
+      - name: Test
+        run: dart run dart_dev test
+
   snapshots:
     runs-on: ubuntu-latest
     strategy:
