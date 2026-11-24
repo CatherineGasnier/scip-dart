@@ -1,0 +1,3 @@
+# `dart test` runs the tests in spec/ by default, so files in spec/ are test
+# code. Files in test/ are test code too, by convention.
+paths: [spec]
